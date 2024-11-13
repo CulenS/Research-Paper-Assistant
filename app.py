@@ -33,7 +33,26 @@ if st.button("Fetch Papers"):
             user_question = st.text_area("Enter your question (related to the first paper summary)")
             if st.button("Get Answer"):
                 if user_question:
-                    answer = model.answer_question(user_question, papers[0]["summary"])
-                    st.write("**Answer**:", answer)
+                    result = model.answer_question_with_span(user_question, papers[0]["summary"])
+                    st.write("**Answer**:", result["answer"])
+                    st.write("**Exact Part of the Paper**:", result["exact_part"])
                 else:
                     st.warning("Please enter a question.")
+
+        # Extract key information from multiple papers
+        st.write("\n## Extract Key Information from All Papers")
+        if st.button("Extract Key Information"):
+            key_info = model.extract_key_information(papers)
+            if key_info:
+                st.write("### Contributions:")
+                for contribution in key_info["contributions"]:
+                    st.write("- ", contribution)
+
+                st.write("\n### Methodologies:")
+                for methodology in key_info["methodologies"]:
+                    st.write("- ", methodology)
+
+                st.write("\n### Conclusions:")
+                for conclusion in key_info["conclusions"]:
+                    st.write("- ", conclusion)
+
